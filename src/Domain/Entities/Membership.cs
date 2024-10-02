@@ -9,8 +9,11 @@ namespace Domain.Entities
 {
     public class Membership
     {
+        public int MembershipId { get; set; }
         public DateTime Date {  get; set; }
         public decimal Payment { get; set; }
         public SubscriptionType Type { get; set; }
+
+        public Membership() { }
     }
 }
