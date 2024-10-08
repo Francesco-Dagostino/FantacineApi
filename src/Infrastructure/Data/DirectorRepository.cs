@@ -10,5 +10,8 @@ namespace Infrastructure.Data
 {
     public class DirectorRepository : BaseRepository<Director>, IDirectorRepository
     {
+
+        public DirectorRepository(AppDBContext dbContext) : base(dbContext) { }
+
     }
 }

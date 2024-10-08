@@ -10,5 +10,7 @@ namespace Infrastructure.Data
 {
     public class MembershipRepository : BaseRepository<Membership>, IMembershipRepository
     {
+        public MembershipRepository(AppDBContext dbContext) : base(dbContext) { }
+
     }
 }

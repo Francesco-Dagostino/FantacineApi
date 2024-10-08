@@ -10,5 +10,6 @@ namespace Infrastructure.Data
 {
     public class MovieRepository : BaseRepository<Movie>, IMovieRepository
     {
+        public MovieRepository(AppDBContext dbContext) : base(dbContext) { }
     }
 }
