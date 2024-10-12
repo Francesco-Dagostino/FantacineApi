@@ -2,31 +2,46 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
+using Application.Services;
+using Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IDirectorRepository, DirectorRepository>();
-builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
-builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Aquí registra los repositorios para cada entidad
+builder.Services.AddScoped<IBaseRepository<User>, UserRepository>();
+builder.Services.AddScoped<IBaseRepository<Movie>, MovieRepository>();
+builder.Services.AddScoped<IBaseRepository<Director>, DirectorRepository>();
+builder.Services.AddScoped<IBaseRepository<Membership>, MembershipRepository>();
+
+// Aquí registra los servicios para cada entidad
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IDirectorService, DirectorService>();
+builder.Services.AddScoped<IMembershipService, MembershipService>();
+
 var app = builder.Build();
 
-var connection = new SqliteConnection("Data source = DBCinema.db");
-connection.Open();
-
-using (var command = connection.CreateCommand())
+// Mover la ejecución del comando PRAGMA dentro del pipeline de solicitudes.
+app.Use(async (context, next) =>
 {
-    command.CommandText = "PRAGMA journal_mode = DELETE;";
-    command.ExecuteNonQuery();
-}
+    // Obtén el contexto de la base de datos desde el servicio
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+        dbContext.Database.ExecuteSqlRaw("PRAGMA journal_mode = DELETE;");
+    }
+
+    await next(); // Continúa con el pipeline de middleware
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

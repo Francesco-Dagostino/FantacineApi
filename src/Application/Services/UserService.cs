@@ -54,5 +54,9 @@ namespace Application.Services
             }
         }
 
+        public User Login(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
