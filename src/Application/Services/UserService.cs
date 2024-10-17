@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,10 +20,31 @@ namespace Application.Services
             _repository = repository;
         }
 
-        public User RegisterUser(User user)
+        public User Create(UserCreateRequest user)
         {
-            //validar antes de agregar el usuario
-            return _repository.Add(user);
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
+                throw new ArgumentException("All fiels must be complet!");
+
+            var isUserExist = _repository.GetByEmail(user.Email);
+
+            if (isUserExist == null)
+            {
+                throw new Exception("No se puede repetir Email");
+            }
+
+            var usuario = new User
+            {
+                Email = user.Email,
+                Name = user.Name,
+                Password = user.Password,
+            };
+
+            return _repository.Add(usuario);
         }
 
         public User GetUserById(int id)
@@ -35,10 +58,20 @@ namespace Application.Services
             return _repository.GetAll(); 
         }
 
-        public void UpdateUser(User user)
+        public User GetByEmail(string email)
         {
-            // Actualizar usuario
-            _repository.Update(user);
+            var user = _repository.GetByEmail(email) ?? throw new ArgumentNullException(nameof(email));
+            return user;
+        }
+
+        public void UpdateUser(int id, UserUpdateRequest user)
+        {
+            var usuario = _repository.GetById(id) ?? throw new EntityNotFoundException(typeof(User).ToString(), id);
+
+            if (user.Name != null) usuario.Name = user.Name;
+            if (user.Password != null) usuario.Password = user.Password;
+
+            _repository.Update(usuario);
         }
 
         public void DeleteUser(int id)

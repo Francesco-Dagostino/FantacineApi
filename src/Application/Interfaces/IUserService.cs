@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.Models;
+using Domain.Entities;
+using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,11 @@ namespace Application.Interfaces
 {
     public interface IUserService
     {
-        User RegisterUser(User user);   
-        User Login(string username, string password); // ver si este metodo se usa o no!!
+        User Create(UserCreateRequest user);   
+        User GetByEmail (string email);
         User GetUserById(int id);
         List<User> GetUsers();
-        void UpdateUser(User user); 
+        void UpdateUser(UserUpdateRequest user); 
         void DeleteUser(int id);
     }
 }
