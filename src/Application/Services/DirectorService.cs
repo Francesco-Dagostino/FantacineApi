@@ -1,11 +1,9 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -17,9 +15,18 @@ namespace Application.Services
         {
             _directorRepository = directorRepository;
         }
-
-        public Director AddDirector(Director director)
+        public Director AddDirector(DirectorCreateRequest request)
         {
+           
+            var director = new Director
+            {
+               
+                Name = request.Name,
+                Description = request.Description,
+                Category = request.Category
+             
+            };
+
             return _directorRepository.Add(director);
         }
 
@@ -27,11 +34,14 @@ namespace Application.Services
         {
             return _directorRepository.GetById(id);
         }
+
+     
         public List<Director> GetAllDirector()
         {
             return _directorRepository.GetAll();
         }
-        
+
+     
         public void DeleteDirector(int id)
         {
             var director = _directorRepository.GetById(id);
@@ -45,9 +55,22 @@ namespace Application.Services
             }
         }
 
-        public void UpdateDirector(Director director)
+        public void UpdateDirector(int DirectorId, DirectorUpdateRequest director)
         {
-            _directorRepository.Update(director);
+
+            var existingDirector = _directorRepository.GetById(DirectorId);
+            if (existingDirector == null)
+            {
+                throw new Exception("Director no encontrado");
+            }
+
+            // Mapear los campos actualizados del DTO a la entidad existente
+            existingDirector.Name = director.Name;
+            existingDirector.Description = director.Description;
+            existingDirector.Category = director.Category;
+
+
+            _directorRepository.Update(existingDirector);
         }
     }
 }
