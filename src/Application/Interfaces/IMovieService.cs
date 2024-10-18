@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Models;
+using Domain.Entities;
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ namespace Application.Interfaces
 {
     public interface IMovieService
     {
-        Movie AddMovie(Movie movie);
+        Movie AddMovie(MovieCreateRequest movie);
         Movie GetMovieById(int id);
         List<Movie> GetAllMovies();
-        void UpdateMovie(Movie movie);
+        void UpdateMovie(int id,MovieUpdateRequest movie);
         void DeleteMovie(int id);
 
         /* Podria ser tambien
