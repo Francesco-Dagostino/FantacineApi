@@ -28,9 +28,7 @@ namespace Domain.Enums
     }
     public enum SubscriptionType
     {
-        Free,
-        Basic,
-        Premium,
-        VIP
+        Active,
+        Desactive
     }
 }

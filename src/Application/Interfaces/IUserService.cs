@@ -15,7 +15,7 @@ namespace Application.Interfaces
         User GetByEmail (string email);
         User GetUserById(int id);
         List<User> GetUsers();
-        void UpdateUser(UserUpdateRequest user); 
+        void UpdateUser(int id, UserUpdateRequest user); 
         void DeleteUser(int id);
     }
 }

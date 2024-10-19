@@ -13,12 +13,9 @@ namespace Infrastructure.Data
     {
         public UserRepository(AppDBContext dbContext) : base(dbContext) { }
 
-
-        /// RESOLVEERR ACA.
-        public User GetByEmail(string email)
+        User IUserRepository.GetByEmail(string email)
         {
-            return _dbContext.Set<User>() // Puedes acceder directamente porque _dbContext ya está declarado en BaseRepository
-                .FirstOrDefault(u => u.Email == email); // Busca por email
+            throw new NotImplementedException();
         }
     }
 }

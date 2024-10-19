@@ -43,5 +43,10 @@ namespace Infrastructure.Data
             _dbContext.SaveChanges();
             return entity;
         }
+
+        public object? GetByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

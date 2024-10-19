@@ -32,7 +32,7 @@ namespace Application.Services
 
             var isUserExist = _repository.GetByEmail(user.Email);
 
-            if (isUserExist == null)
+            if (isUserExist != null)
             {
                 throw new Exception("No se puede repetir Email");
             }
@@ -49,8 +49,8 @@ namespace Application.Services
 
         public User GetUserById(int id)
         {
-            // Obtener usuario por ID
-            return _repository.GetById(id);
+            var obj = _repository.GetById(id) ?? throw new ArgumentNullException(nameof(GetUserById));
+            return obj;
         }
 
         public List<User> GetUsers()
@@ -61,7 +61,7 @@ namespace Application.Services
         public User GetByEmail(string email)
         {
             var user = _repository.GetByEmail(email) ?? throw new ArgumentNullException(nameof(email));
-            return user;
+            return (User)user;
         }
 
         public void UpdateUser(int id, UserUpdateRequest user)
@@ -76,20 +76,15 @@ namespace Application.Services
 
         public void DeleteUser(int id)
         {
-            var user = _repository.GetById(id); // Cambié _userRepository a _repository
+            var user = _repository.GetById(id) ?? throw new ArgumentNullException(nameof(id));
             if (user != null)
             {
-                _repository.Delete(user); // Cambié _userRepository a _repository
+                _repository.Delete(user); 
             }
             else
             {
                 throw new Exception("Usuario no encontrado");
             }
-        }
-
-        public User Login(string username, string password)
-        {
-            throw new NotImplementedException();
         }
     }
 }

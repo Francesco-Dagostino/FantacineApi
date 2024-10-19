@@ -1,8 +1,11 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Api.Controllers
 {
@@ -17,50 +20,66 @@ namespace Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("register")]
-        public ActionResult<User> RegisterUser([FromBody] User user)
+        [HttpPost("Register")]
+        public ActionResult<UserCreateRequest> Add(UserCreateRequest user)
         {
             try
             {
-                var createdUser = _userService.RegisterUser(user);
+                var createdUser = _userService.Create(user);
                 return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser);
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex); // Log para obtener detalles de la excepción.
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<User> GetUserById(int id)
-        {
-            var user = _userService.GetUserById(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return Ok(user);
-        }
-
-        [HttpGet("{TodosUsers}")]
-        public ActionResult<List<User>> GetUsers()
+        [HttpGet("GetAll")]
+        public ActionResult<IEnumerable<User>> GetUsers()
         {
             var users = _userService.GetUsers();
             return Ok(users);
         }
 
-        [HttpPut("{id}")]
-        public ActionResult UpdateUser(int id, [FromBody] User user)
+        [HttpGet("{id}")]
+        public ActionResult<User> GetUserById(int id)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest("User ID mismatch");
-            }
-
             try
             {
-                _userService.UpdateUser(user);
-                return NoContent(); 
+                var user = _userService.GetUserById(id);
+                return Ok(user);
+            } catch (Exception ex)
+            {
+                return NotFound($"User with ID {id} not found.");
+            }
+        }
+
+        [HttpGet("email/{email}")]
+        public ActionResult<User> GetByEmail(string email)
+        {
+            try
+            {
+                var user = _userService.GetByEmail(email);
+                return Ok(user);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound($"User with Email {email} not found.");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateUser([FromRoute] int id, [FromBody] UserUpdateRequest user)
+        {
+            try
+            {
+                _userService.UpdateUser(id, user);
+                return NoContent();
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -71,15 +90,8 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
-            try
-            {
-                _userService.DeleteUser(id);
-                return NoContent(); 
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            _userService.DeleteUser(id);
+            return NoContent();
         }
     }
 }
