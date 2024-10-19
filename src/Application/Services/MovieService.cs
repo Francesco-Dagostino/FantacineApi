@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Domain.Interfaces;
 using System;
@@ -17,9 +18,16 @@ namespace Application.Services
             _movieRepository = movieRepository;
         }
 
-        public Movie AddMovie(Movie movie)
+        public Movie AddMovie(MovieCreateRequest movie)
         {
-            return _movieRepository.Add(movie);
+            var newMovie = new Movie
+            {
+                Title = movie.Title,
+                Category = movie.Category,
+                Duration = movie.Duration,
+                Description = movie.Description
+            };
+            return _movieRepository.Add(newMovie);
         }
 
         public Movie GetMovieById(int id)
@@ -32,14 +40,23 @@ namespace Application.Services
             return _movieRepository.GetAll();
         }
 
-        public void UpdateMovie(Movie movie)
+        public void UpdateMovie(int id, MovieUpdateRequest movie)
         {
-            _movieRepository.Update(movie);
+            var existingMovie = _movieRepository.GetById(id);
+            if (existingMovie == null) 
+            {
+                throw new Exception("Pelicula no encontrada");
+            }
+
+            existingMovie.Title = movie.Title;
+            existingMovie.Category = movie.Category;
+            existingMovie.Duration = movie.Duration;
+            existingMovie.Description = movie.Description;
+            _movieRepository.Update(existingMovie);
         }
 
         public void DeleteMovie(int id)
         {
-            // Lógica para eliminar una película por ID
             var movie = _movieRepository.GetById(id);
             if (movie != null)
             {
