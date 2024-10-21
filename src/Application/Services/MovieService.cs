@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,11 @@ namespace Application.Services
         public MovieService(IMovieRepository movieRepository)
         {
             _movieRepository = movieRepository;
+        }
+
+        public List<Movie> GetMoviesByGenre(Genre genre)
+        {
+            return _movieRepository.GetMoviesByGenre(genre);
         }
 
         public Movie AddMovie(MovieCreateRequest movie)

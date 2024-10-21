@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,17 @@ namespace Web.Controllers
                 return NotFound();
             }
             return Ok(movie);
+        }
+
+        [HttpGet("genre/{genre}")]
+        public ActionResult<List<Movie>> GetMoviesByGenre(Genre genre)
+        {
+            var movies = _movieRepository.GetMoviesByGenre(genre);
+            if (movies == null || movies.Count == 0)
+            {
+                return NotFound("No movies found for the specified genre.");
+            }
+            return Ok(movies);
         }
 
         [HttpGet("All Movies")]

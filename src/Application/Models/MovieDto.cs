@@ -10,30 +10,28 @@ namespace Application.Models
 {
     public class MovieCreateRequest
     {
+        ///[Required]
+        //public int MovieId { get; set; }
         [Required]
-        public int MovieId { get; set; }
-        [Required]
-        public string Category { get; set; }
+        public Genre Category { get; set; }
         [Required]
         public int Duration { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
-        public Genre Description { get; set; }
+        public string Description { get; set; }
     }
 
     public class MovieUpdateRequest
     {
         [Required]
-        public int MovieId { get; set; }
-        [Required]
-        public string Category { get; set; } 
+        public Genre Category { get; set; } 
         [Required]
         public int Duration { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
-        public Genre Description { get; set; }
+        public string Description { get; set; }
        
         
     }
