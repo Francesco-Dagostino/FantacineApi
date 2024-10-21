@@ -12,8 +12,8 @@ namespace Application.Services
 {
     public class MovieService : IMovieService
     {
-        private readonly IBaseRepository<Movie> _movieRepository;
-        public MovieService(IBaseRepository<Movie> movieRepository)
+        private readonly IMovieRepository _movieRepository;
+        public MovieService(IMovieRepository movieRepository)
         {
             _movieRepository = movieRepository;
         }

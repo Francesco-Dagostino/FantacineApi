@@ -13,9 +13,9 @@ namespace Application.Services
 {
     public class UserService : IUserService
     {
-        private readonly IBaseRepository<User> _repository;
+        private readonly IUserRepository _repository;
 
-        public UserService(IBaseRepository<User> repository)
+        public UserService(IUserRepository repository)
         {
             _repository = repository;
         }

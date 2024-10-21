@@ -9,9 +9,9 @@ namespace Application.Services
 {
     public class DirectorService : IDirectorService
     {
-        private readonly IBaseRepository<Director> _directorRepository;
+        private readonly IDirectorRepository _directorRepository;
 
-        public DirectorService(IBaseRepository<Director> directorRepository)
+        public DirectorService(IDirectorRepository directorRepository)
         {
             _directorRepository = directorRepository;
         }

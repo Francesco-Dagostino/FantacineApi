@@ -12,9 +12,9 @@ namespace Application.Services
 {
     public class MembershipService : IMembershipService
     {
-        private readonly IBaseRepository<Membership> _membershipRepository;
+        private readonly IMembershipRepository _membershipRepository;
 
-        public MembershipService(IBaseRepository<Membership> membershipRepository)
+        public MembershipService(IMembershipRepository membershipRepository)
         {
             _membershipRepository = membershipRepository;
         }

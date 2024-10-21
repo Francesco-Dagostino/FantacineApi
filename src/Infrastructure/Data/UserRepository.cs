@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class UserRepository : EfRepository<User>, IUserRepository
     {
         public UserRepository(AppDBContext dbContext) : base(dbContext) { }
 
-        User IUserRepository.GetByEmail(string email)
+        public User GetByEmail(string email)
         {
-            throw new NotImplementedException();
+            return _dbContext.Users.FirstOrDefault(u => u.Email == email);
         }
     }
 }

@@ -19,10 +19,10 @@ builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Aquí registra los repositorios para cada entidad
-builder.Services.AddScoped<IBaseRepository<User>, UserRepository>();
-builder.Services.AddScoped<IBaseRepository<Movie>, MovieRepository>();
-builder.Services.AddScoped<IBaseRepository<Director>, DirectorRepository>();
-builder.Services.AddScoped<IBaseRepository<Membership>, MembershipRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IDirectorRepository, DirectorRepository>();
+builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
 
 // Aquí registra los servicios para cada entidad
 builder.Services.AddScoped<IUserService, UserService>();
