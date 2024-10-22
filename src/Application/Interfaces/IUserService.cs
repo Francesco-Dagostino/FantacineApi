@@ -17,5 +17,8 @@ namespace Application.Interfaces
         List<User> GetUsers();
         void UpdateUser(int id, UserUpdateRequest user); 
         void DeleteUser(int id);
+
+        //Firma para usar Roles
+        void UpdateRole(int id, SuperAdminUserUpdateRequest user);
     }
 }

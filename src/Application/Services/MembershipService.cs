@@ -23,15 +23,15 @@ namespace Application.Services
 
         public Membership AddMembership(MembershipCreateRequest membership)
         {
-             var newMembership = new Membership
+            var newMembership = new Membership
             {
                
                 Type = membership.Type,
                 Payment = membership.Payment,
                 Date = membership.Date,
-                UserId = membership.UserId
-             
+                UserId = membership.UserId 
             };
+
             return _membershipRepository.Add(newMembership);
         }
 

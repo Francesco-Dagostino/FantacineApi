@@ -55,7 +55,7 @@ namespace Application.Services
 
         public List<User> GetUsers()
         {
-            return _repository.GetAll(); 
+            return _repository.GetAll();
         }
 
         public User GetByEmail(string email)
@@ -79,12 +79,21 @@ namespace Application.Services
             var user = _repository.GetById(id) ?? throw new ArgumentNullException(nameof(id));
             if (user != null)
             {
-                _repository.Delete(user); 
+                _repository.Delete(user);
             }
             else
             {
                 throw new Exception("Usuario no encontrado");
             }
+        }
+
+        //Roles..
+        public void UpdateRole(int id, SuperAdminUserUpdateRequest useruserToUpdate)
+        {
+            var usuario = GetUserById(id);
+
+            if (user.Role != userToUpdate.Roles) user.Role = userToUpdate.Roles;
+            _repository.Update(usuario);
         }
     }
 }
