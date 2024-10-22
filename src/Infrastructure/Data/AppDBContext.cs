@@ -19,6 +19,16 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Movie>()
+                .HasOne(o => o.Director)
+                .WithMany(v => v.Movies)
+                .HasForeignKey(o => o.DirectorId);
+
+            modelBuilder.Entity<User>()
+                .HasOne(o => o.Membership)
+                .WithOne(v => v.Users)
+                .HasForeignKey<Membership>(o => o.UserId);
+
 
             base.OnModelCreating(modelBuilder);
 
