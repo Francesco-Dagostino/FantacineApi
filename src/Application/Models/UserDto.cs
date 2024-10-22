@@ -15,8 +15,8 @@ namespace Application.Models
         [StringLength(20, MinimumLength = 2, ErrorMessage = "The password must be at least 20 characters long")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "The Email must be complete")]
-        [StringLength(20, MinimumLength = 2, ErrorMessage = "The password must be at least 20 characters long")]
+        [Required(ErrorMessage = "The email must be completed")]
+        [EmailAddress(ErrorMessage = "Must be a valid email address")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "The password must be completed")]
@@ -38,6 +38,6 @@ namespace Application.Models
     public class SuperAdminUserUpdateRequest
     {
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public UserRole Role { get; set; }
+        public Roles Roles { get; set; }
     }
 }

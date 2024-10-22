@@ -18,7 +18,7 @@ namespace Web.Controllers
             _serviceMembership = service;
         }
 
-        [HttpPost("AddMembeship")]
+        /*[HttpPost("AddMembeship")]
         public ActionResult<Membership> AsignarMembership([FromBody] Membership membership)
         {
             // Asignar membresia al cliente ||| VER TEMA ROLES
@@ -57,7 +57,7 @@ namespace Web.Controllers
                 return NotFound(ex.Message);
             }
         }
-
+        */
 
     }
 }

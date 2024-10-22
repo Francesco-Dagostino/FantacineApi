@@ -8,7 +8,7 @@ namespace Domain.Enums
         EnProyeccion,
         Retirada
     }
-    public enum UserRole
+    public enum Roles
     {
         Client,
         Admin,

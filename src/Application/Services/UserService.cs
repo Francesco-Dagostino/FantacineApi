@@ -88,11 +88,11 @@ namespace Application.Services
         }
 
         //Roles..
-        public void UpdateRole(int id, SuperAdminUserUpdateRequest useruserToUpdate)
+        public void UpdateRole(int id, SuperAdminUserUpdateRequest userToUpdate)
         {
             var usuario = GetUserById(id);
 
-            if (user.Role != userToUpdate.Roles) user.Role = userToUpdate.Roles;
+            if (usuario.Role != userToUpdate.Roles) usuario.Role = userToUpdate.Roles;
             _repository.Update(usuario);
         }
     }
