@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
@@ -13,15 +14,25 @@ namespace Application.Services
     public class MembershipService : IMembershipService
     {
         private readonly IMembershipRepository _membershipRepository;
-
+        
         public MembershipService(IMembershipRepository membershipRepository)
         {
             _membershipRepository = membershipRepository;
+
         }
 
-        public Membership AddMembership(Membership membership)
+        public Membership AddMembership(MembershipCreateRequest membership)
         {
-            return _membershipRepository.Add(membership);
+             var newMembership = new Membership
+            {
+               
+                Type = membership.Type,
+                Payment = membership.Payment,
+                Date = membership.Date,
+                UserId = membership.UserId
+             
+            };
+            return _membershipRepository.Add(newMembership);
         }
 
         public Membership GetMembershipById (int id)
@@ -34,9 +45,22 @@ namespace Application.Services
             return _membershipRepository.GetAll();
         }
         
-        public void UpdateMembership(Membership membership)
+        public void UpdateMembership(MembershipUpdateRequest membership)
         {
-            _membershipRepository.Update(membership);
+             // Buscar la membresía existente
+                var existingMembership = _membershipRepository.GetById(membership.UserId);
+                if (existingMembership == null)
+                {
+                    throw new Exception("Usuario no encontrado");
+                }
+
+                // Mapear los campos actualizados del DTO a la entidad existente
+                existingMembership.Type = membership.Type;
+                existingMembership.Payment = membership.Payment;
+                existingMembership.Date = membership.Date;
+
+                // Actualizar la membresía en el repositorio
+                _membershipRepository.Update(existingMembership);
         }
 
         public void DeleteMembership(int id)
