@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models;
+using Application.Services;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
@@ -19,7 +20,9 @@ namespace Web.Controllers
         [HttpPost("Add Movie")]
         public ActionResult<Movie> AddMovie([FromBody] MovieCreateRequest movie) 
         {
+
             return Ok(_movieRepository.AddMovie(movie));
+            
         }
 
         [HttpGet("{id}")]
@@ -33,7 +36,15 @@ namespace Web.Controllers
             return Ok(movie);
         }
 
-        [HttpGet("genre/{genre}")]
+        [HttpGet("Todos los generos")]
+        public ActionResult<List<string>> GetGenres()
+        {
+            var genres = _movieRepository.GetGenres();
+            return Ok(genres);
+        }
+
+
+        [HttpGet("Filtrar por genero/{genre}")]
         public ActionResult<List<Movie>> GetMoviesByGenre(Genre genre)
         {
             var movies = _movieRepository.GetMoviesByGenre(genre);
