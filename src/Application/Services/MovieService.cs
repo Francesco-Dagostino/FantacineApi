@@ -46,6 +46,11 @@ namespace Application.Services
             return _movieRepository.GetAll();
         }
 
+        public List<string> GetGenres() 
+        {
+            return Enum.GetNames(typeof(Genre)).ToList();
+        }
+
         public void UpdateMovie(int id, MovieUpdateRequest movie)
         {
             var existingMovie = _movieRepository.GetById(id);

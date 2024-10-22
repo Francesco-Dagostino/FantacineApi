@@ -9,8 +9,7 @@ namespace Application.Models
 {
     public class DirectorCreateRequest
     {
-        [Required(ErrorMessage = "The Director ID is required.")]
-        public int DirectorId { get; set; }
+
 
         [Required(ErrorMessage = "The Name is required.")]
         [StringLength(20, MinimumLength = 2, ErrorMessage = "The Name must be between 2 and 20 characters long.")]
