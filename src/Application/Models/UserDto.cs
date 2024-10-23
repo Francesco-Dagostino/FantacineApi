@@ -37,6 +37,8 @@ namespace Application.Models
 
     public class SuperAdminUserUpdateRequest
     {
+        public int UserId { get; set; }
+
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Roles Roles { get; set; }
     }

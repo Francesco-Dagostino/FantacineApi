@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using System;
@@ -77,23 +78,31 @@ namespace Application.Services
         public void DeleteUser(int id)
         {
             var user = _repository.GetById(id) ?? throw new ArgumentNullException(nameof(id));
-            if (user != null)
-            {
-                _repository.Delete(user);
-            }
-            else
-            {
-                throw new Exception("Usuario no encontrado");
-            }
+            _repository.Delete(user);
         }
 
         //Roles..
         public void UpdateRole(int id, SuperAdminUserUpdateRequest userToUpdate)
         {
-            var usuario = GetUserById(id);
+            var userRequestingChange = GetUserById(id);
+            // Solo el SuperAdmin puede cambiar roles
+            if (userRequestingChange.Role != Roles.SuperAdmin)
+            {
+                throw new UnauthorizedAccessException("Only SuperAdmin can change roles.");
+            }
 
-            if (usuario.Role != userToUpdate.Roles) usuario.Role = userToUpdate.Roles;
-            _repository.Update(usuario);
+            var userToBeUpdated = GetUserById(userToUpdate.UserId);
+
+            // Si el rol es diferente, lo actualizamos
+            if (userToBeUpdated.Role != userToUpdate.Roles)
+            {
+                userToBeUpdated.Role = userToUpdate.Roles;
+                _repository.Update(userToBeUpdated);
+            }
+            else
+            {
+                throw new Exception("The user already has this role.");
+            }
         }
     }
 }

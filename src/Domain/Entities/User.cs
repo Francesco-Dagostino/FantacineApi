@@ -25,8 +25,8 @@ namespace Domain.Entities
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public DateTime Birthday { get; set; }
-        public Roles Role { get; set; } // Aquí utilizamos el enum
-        public Membership Membership { get; set; } = new Membership();
+        public Roles Role { get; set; } 
+        //public Membership Membership { get; set; } = new Membership();
         public User() { }
     }
 }

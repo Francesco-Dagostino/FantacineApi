@@ -17,14 +17,14 @@ namespace Infrastructure.Data
 
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Movie>()
                 .HasOne(o => o.Director)
                 .WithMany(v => v.Movies)
                 .HasForeignKey(o => o.DirectorId);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<User>() 
                 .HasOne(o => o.Membership)
                 .WithOne(v => v.Users)
                 .HasForeignKey<Membership>(o => o.UserId);
@@ -33,5 +33,6 @@ namespace Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
         }
+        */
     }
 }

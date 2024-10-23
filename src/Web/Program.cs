@@ -5,23 +5,74 @@ using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 using Application.Services;
 using Domain.Entities;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer; // Agregar esta referencia para JWT
+using Microsoft.IdentityModel.Tokens; // Para la validación de tokens
+using System.Text; // Para el encoding de la clave secreta
+using static Infrastructure.Services.AutenticationService;
+using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSwaggerGen(setupAction =>
+{
+    setupAction.AddSecurityDefinition("EcommerceApiBearerAuth", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        Description = "Acá pegar el token generado al loguearse."
+    });
+
+    setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "FantacineApi" } //Tiene que coincidir con el id seteado arriba en la definición
+                }, new List<string>() }
+    });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    setupAction.IncludeXmlComments(xmlPath); //Si esta linea falla agregar en el Web.csproj esta linea: <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+});
+
+
+builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntenticación que tenemos que elegir después en PostMan para pasarle el token
+    .AddJwtBearer(options => //Acá definimos la configuración de la autenticación. le decimos qué cosas queremos comprobar. La fecha de expiración se valida por defecto.
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["AutenticacionService:Issuer"],
+            ValidAudience = builder.Configuration["AutenticacionService:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["AutenticacionService:SecretForKey"]))
+        };
+    }
+);
+
+
+// Configura las opciones de Autenticación
+builder.Services.Configure<AuthenticationServiceOptions>(
+    builder.Configuration.GetSection(AuthenticationServiceOptions.AuthenticationService));
 
 // Aquí registra los repositorios para cada entidad
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -34,6 +85,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IDirectorService, DirectorService>();
 builder.Services.AddScoped<IMembershipService, MembershipService>();
+builder.Services.AddScoped<ICustomAutenticationService, AutenticationService>();
+
+//region conceccion a la base de datos
+builder.Services.AddDbContext<AppDBContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -59,7 +115,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseAuthentication(); // Agregar autenticación en el pipeline, antes de Authorization
+
+app.UseAuthorization(); // Middleware de autorización
 
 app.MapControllers();
 

@@ -2,13 +2,16 @@
 using Application.Models;
 using Domain.Entities;
 using Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -69,17 +72,20 @@ namespace Api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public ActionResult UpdateUser([FromRoute] int id, [FromBody] UserUpdateRequest user)
+
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpPut("{id}/UpdateRole")]
+        public ActionResult UpdateUserRole([FromRoute] int id, [FromBody] SuperAdminUserUpdateRequest userToUpdate)
         {
             try
             {
-                _userService.UpdateUser(id, user);
+                // `id` es el ID del SuperAdmin que está solicitando el cambio
+                _userService.UpdateRole(id, userToUpdate);
                 return NoContent();
             }
-            catch (EntityNotFoundException ex)
+            catch (UnauthorizedAccessException ex)
             {
-                return NotFound(ex.Message);
+                return Forbid(ex.Message);
             }
             catch (Exception ex)
             {
@@ -87,9 +93,18 @@ namespace Api.Controllers
             }
         }
 
+
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            if (userRole != "Admin")
+            {
+                return Forbid();
+            }
+
             _userService.DeleteUser(id);
             return NoContent();
         }
