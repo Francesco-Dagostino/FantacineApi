@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Api.Controllers
 {
-    [Authorize]
+
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase

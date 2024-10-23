@@ -26,7 +26,7 @@ namespace Domain.Entities
         public string Password { get; set; }
         public DateTime Birthday { get; set; }
         public Roles Role { get; set; } // Aquí utilizamos el enum
-        public Membership Membership { get; set; }// = new Membership();
+        public Membership Membership { get; set; } = new Membership();
         public User() { }
     }
 }
