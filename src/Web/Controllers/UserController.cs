@@ -100,7 +100,7 @@ namespace Api.Controllers
         {
             var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            if (userRole != "Admin")
+            if (userRole != "Admin" && userRole != "SuperAdmin")
             {
                 return Forbid();
             }

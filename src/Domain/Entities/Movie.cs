@@ -15,9 +15,8 @@ namespace Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public int DirectorId {  get; set; }  
-        public Director Director { get; set; }
-        
-        
+        public Director Director { get; set; } = new Director(); 
+
         public Movie() { }
     }
 }

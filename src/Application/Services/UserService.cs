@@ -43,6 +43,7 @@ namespace Application.Services
                 Email = user.Email,
                 Name = user.Name,
                 Password = user.Password,
+                Role = Roles.Client //Asigna rol por defecto
             };
 
             return _repository.Add(usuario);

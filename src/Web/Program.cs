@@ -15,8 +15,18 @@ using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configuración de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
+// Add services to the container.
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -44,18 +54,18 @@ builder.Services.AddSwaggerGen(setupAction =>
                 {
                     Type = ReferenceType.SecurityScheme,
                     Id = "FantacineApi" } //Tiene que coincidir con el id seteado arriba en la definición
-                }, new List<string>() }
+                }, new List<string>() 
+        }
     });
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    setupAction.IncludeXmlComments(xmlPath); //Si esta linea falla agregar en el Web.csproj esta linea: <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
+    setupAction.IncludeXmlComments(xmlPath); // Si esta línea falla, agregar en el Web.csproj esta línea: <GenerateDocumentationFile>true</GenerateDocumentationFile>
 });
 
-
-builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntenticación que tenemos que elegir después en PostMan para pasarle el token
-    .AddJwtBearer(options => //Acá definimos la configuración de la autenticación. le decimos qué cosas queremos comprobar. La fecha de expiración se valida por defecto.
+// Configuración de JWT
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new()
         {
@@ -66,9 +76,7 @@ builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntentica
             ValidAudience = builder.Configuration["AutenticacionService:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["AutenticacionService:SecretForKey"]))
         };
-    }
-);
-
+    });
 
 // Configura las opciones de Autenticación
 builder.Services.Configure<AuthenticationServiceOptions>(
@@ -87,11 +95,14 @@ builder.Services.AddScoped<IDirectorService, DirectorService>();
 builder.Services.AddScoped<IMembershipService, MembershipService>();
 builder.Services.AddScoped<ICustomAutenticationService, AutenticationService>();
 
-//region conceccion a la base de datos
+// Configuración de la conexión a la base de datos
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
+
+// Usar CORS
+app.UseCors("AllowAllOrigins");
 
 // Mover la ejecución del comando PRAGMA dentro del pipeline de solicitudes.
 app.Use(async (context, next) =>
