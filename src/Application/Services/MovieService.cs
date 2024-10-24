@@ -14,8 +14,10 @@ namespace Application.Services
     public class MovieService : IMovieService
     {
         private readonly IMovieRepository _movieRepository;
-        public MovieService(IMovieRepository movieRepository)
+        private readonly IDirectorRepository _directorRepository;
+        public MovieService(IMovieRepository movieRepository, IDirectorRepository directorRepository)
         {
+            _directorRepository = directorRepository;
             _movieRepository = movieRepository;
         }
 
@@ -26,24 +28,34 @@ namespace Application.Services
 
         public Movie AddMovie(MovieCreateRequest movie)
         {
+            var existingDirector = _movieRepository.GetDirectorById(movie.DirectorId);
+            if (existingDirector == null)
+            {
+                throw new Exception("El director con el ID proporcionado no existe.");
+            }
+
+            // Crear la nueva película
             var newMovie = new Movie
             {
                 Title = movie.Title,
                 Category = movie.Category,
                 Duration = movie.Duration,
-                Description = movie.Description
+                Description = movie.Description,
+                DirectorId = movie.DirectorId // Conectar el director existente
             };
+
+            // Guardar la película en el repositorio
             return _movieRepository.Add(newMovie);
         }
 
         public Movie GetMovieById(int id)
         {
-            return _movieRepository.GetById(id);
+            return _movieRepository.GetMovieById(id);
         }
 
         public List<Movie> GetAllMovies()
         {
-            return _movieRepository.GetAll();
+            return _movieRepository.GetAllMovies(); 
         }
 
         public List<string> GetGenres() 

@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,31 @@ namespace Infrastructure.Data
 
         public List<Movie> GetMoviesByGenre(Genre genre)
         {
-            return _dbContext.Movies.Where(m => m.Category == genre).ToList();
+            return _dbContext.Movies
+                .Where(m => m.Category == genre)
+                .Include(m => m.Director)
+                .ToList();  
         }
+
+        public Director GetDirectorById(int directorId)
+        {
+            return _dbContext.Directors.Find(directorId);
+                
+        }
+
+        public List<Movie> GetAllMovies()
+        {
+            return _dbContext.Movies
+                .Include(m => m.Director)
+                .ToList();
+        }
+
+        public Movie GetMovieById(int id)
+        {
+            return _dbContext.Movies
+                .Include(m => m.Director) 
+                .FirstOrDefault(m => m.MovieId == id);
+        }
+
     }
 }

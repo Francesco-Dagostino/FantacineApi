@@ -31,7 +31,7 @@ namespace Application.Models
         public string Description { get; set; }
         [Required]
         public string Category { get; set; }
-        [Required]
+
         public int DirectorId { get; set; }
     }
 }

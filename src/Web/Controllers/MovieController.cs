@@ -57,8 +57,10 @@ namespace Web.Controllers
 
         [HttpGet("All Movies")]
         public ActionResult<List<Movie>> GetAllMovies() 
-        { 
-            return Ok(_movieRepository.GetAllMovies());
+        {
+            var movies = _movieRepository.GetAllMovies();
+            return Ok(movies);
+            
         }
 
         [HttpPut("Update/{id}")]

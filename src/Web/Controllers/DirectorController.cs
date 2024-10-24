@@ -20,6 +20,11 @@ namespace Web.Controllers
         [HttpPost("Agregar Director")]
         public ActionResult<Director> AddDirector([FromBody] DirectorCreateRequest director)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Esto devuelve los errores de validación si el modelo es inválido
+            }
+
             return Ok(_service.AddDirector(director));
         }
 
