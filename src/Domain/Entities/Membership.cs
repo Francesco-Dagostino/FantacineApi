@@ -10,14 +10,13 @@ namespace Domain.Entities
 {
     public class Membership
     {
-          // Anotación para definir la clave primaria
         public int MembershipId { get; set; }
         public DateTime Date {  get; set; }
         public decimal Payment { get; set; }
         public SubscriptionType Type { get; set; }
-        
-        public User Users { get; set; } = new User();
-        public int UserId { get; set; }
+
+        public int UserId { get; set; } // Clave foránea
+        public virtual User User { get; set; } // Relación con User
 
         public Membership() { }
     }

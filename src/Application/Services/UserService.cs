@@ -15,10 +15,12 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly IMembershipService _membershipService;
 
-        public UserService(IUserRepository repository)
+        public UserService(IUserRepository repository, IMembershipService membershipService)
         {
             _repository = repository;
+            _membershipService = membershipService;
         }
 
         public User Create(UserCreateRequest user)
@@ -29,25 +31,37 @@ namespace Application.Services
             }
 
             if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
-                throw new ArgumentException("All fiels must be complet!");
+                throw new ArgumentException("All fields must be complete!");
 
             var isUserExist = _repository.GetByEmail(user.Email);
-
             if (isUserExist != null)
             {
                 throw new Exception("No se puede repetir Email");
             }
 
+            // Inicializa el usuario y su membresía
             var usuario = new User
             {
                 Email = user.Email,
                 Name = user.Name,
                 Password = user.Password,
-                Role = Roles.Client //Asigna rol por defecto
+                Role = Roles.Client, // Asigna rol por defecto
+                Memberships = new Membership // Inicializa la membresía directamente
+                {
+                    Date = DateTime.Now,
+                    Payment = 0, // O el monto que desees
+                    Type = SubscriptionType.Active,
+                    // No necesitas asignar UserId aquí; eso se maneja en la relación inversa
+                }
             };
 
-            return _repository.Add(usuario);
+            // Agrega el usuario al repositorio
+            var createdUser = _repository.Add(usuario);
+
+            return createdUser; // Retorna el usuario creado
         }
+
+
 
         public User GetUserById(int id)
         {

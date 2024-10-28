@@ -24,9 +24,9 @@ namespace Infrastructure.Data
                  .WithMany(v => v.Movies)
                  .HasForeignKey(o => o.DirectorId);
 
-            modelBuilder.Entity<User>()
-                .HasOne(o => o.Membership)
-                .WithOne(v => v.Users)
+            modelBuilder.Entity<Membership>()
+                .HasOne(o => o.User)
+                .WithOne(v => v.Memberships)
                 .HasForeignKey<Membership>(o => o.UserId);
         }
     }
