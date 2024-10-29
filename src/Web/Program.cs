@@ -88,13 +88,11 @@ builder.Services.Configure<AuthenticationServiceOptions>(
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IDirectorRepository, DirectorRepository>();
-builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
 
 // Aquí registra los servicios para cada entidad
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IDirectorService, DirectorService>();
-builder.Services.AddScoped<IMembershipService, MembershipService>();
 builder.Services.AddScoped<ICustomAutenticationService, AutenticationService>();
 
 // Configuración de la conexión a la base de datos

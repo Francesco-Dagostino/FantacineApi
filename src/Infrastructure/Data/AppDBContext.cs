@@ -12,7 +12,6 @@ namespace Infrastructure.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Director> Directors { get; set; }
-        public DbSet<Membership> Memberships { get; set; }
         public DbSet<Movie> Movies { get; set; }
 
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
@@ -23,11 +22,6 @@ namespace Infrastructure.Data
                  .HasOne(o => o.Director)
                  .WithMany(v => v.Movies)
                  .HasForeignKey(o => o.DirectorId);
-
-            modelBuilder.Entity<Membership>()
-                .HasOne(o => o.User)
-                .WithOne(v => v.Membership)
-                .HasForeignKey<Membership>(o => o.UserId);
         }
     }
 }

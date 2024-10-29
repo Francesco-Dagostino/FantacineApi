@@ -2,12 +2,7 @@
 
 namespace Domain.Enums
 {
-    public enum MovieStatus
-    {
-        Disponible,
-        EnProyeccion,
-        Retirada
-    }
+
     public enum Roles
     {
         Client,
@@ -25,10 +20,5 @@ namespace Domain.Enums
         Documentary,
         Thriller,
         Animation
-    }
-    public enum SubscriptionType
-    {
-        Active,
-        Desactive
     }
 }

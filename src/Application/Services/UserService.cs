@@ -15,50 +15,44 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
-        private readonly IMembershipService _membershipService;
 
-        public UserService(IUserRepository repository, IMembershipService membershipService)
+
+        public UserService(IUserRepository repository)
         {
             _repository = repository;
-            _membershipService = membershipService;
         }
 
         public User Create(UserCreateRequest user)
         {
-            if (user == null)
+            ValidateUserCreateRequest(user); // Método de validación separado
+
+            // Verifica si el usuario ya existe
+            var existingUser = _repository.GetByEmail(user.Email);
+            if (existingUser != null)
             {
-                throw new ArgumentNullException(nameof(user));
+                throw new Exception("Email already exists.");
             }
 
-            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
-                throw new ArgumentException("All fields must be complete!");
-
-            var isUserExist = _repository.GetByEmail(user.Email);
-            if (isUserExist != null)
-            {
-                throw new Exception("No se puede repetir Email");
-            }
-
-            // Inicializa el usuario y su membresía
-            var usuario = new User
+            // Crear el usuario
+            var newUser = new User
             {
                 Email = user.Email,
                 Name = user.Name,
                 Password = user.Password,
-                Role = Roles.Client, // Asigna rol por defecto
-                Membership = new Membership // Inicializa la membresía directamente
-                {
-                    Date = DateTime.Now,
-                    Payment = 0, // O el monto que desees
-                    Type = SubscriptionType.Active,
-                    // No necesitas asignar UserId aquí; eso se maneja en la relación inversa
-                }
+                Role = Roles.Client // Asignar rol por defecto
             };
 
-            // Agrega el usuario al repositorio
-            var createdUser = _repository.Add(usuario);
-
+            // Agregar el usuario al repositorio
+            var createdUser = _repository.Add(newUser);
             return createdUser; // Retorna el usuario creado
+        }
+
+        // Método de validación para el DTO de creación
+        private void ValidateUserCreateRequest(UserCreateRequest user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
+                throw new ArgumentException("All fields must be complete!");
         }
 
 
@@ -104,19 +98,6 @@ namespace Application.Services
             if (userRequestingChange.Role != Roles.SuperAdmin)
             {
                 throw new UnauthorizedAccessException("Only SuperAdmin can change roles.");
-            }
-
-            var userToBeUpdated = GetUserById(userToUpdate.UserId);
-
-            // Si el rol es diferente, lo actualizamos
-            if (userToBeUpdated.Role != userToUpdate.Roles)
-            {
-                userToBeUpdated.Role = userToUpdate.Roles;
-                _repository.Update(userToBeUpdated);
-            }
-            else
-            {
-                throw new Exception("The user already has this role.");
             }
         }
     }

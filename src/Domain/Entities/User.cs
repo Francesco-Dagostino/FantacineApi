@@ -23,9 +23,7 @@ namespace Domain.Entities
         [MinLength(8, ErrorMessage = "The password must be at least 8 characters long")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public DateTime Birthday { get; set; }
         public Roles Role { get; set; } // Aquí utilizamos el enum
-        public virtual Membership Membership { get; set; } 
         public User() { }
     }
 }
