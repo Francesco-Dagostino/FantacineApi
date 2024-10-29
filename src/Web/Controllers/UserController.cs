@@ -38,6 +38,7 @@ namespace Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet("GetAll")]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
@@ -45,6 +46,8 @@ namespace Api.Controllers
             return Ok(users);
         }
 
+
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet("{id}")]
         public ActionResult<User> GetUserById(int id)
         {
@@ -58,6 +61,7 @@ namespace Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet("email/{email}")]
         public ActionResult<User> GetByEmail(string email)
         {
@@ -85,7 +89,7 @@ namespace Api.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Forbid(ex.Message);
+                return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -102,7 +106,7 @@ namespace Api.Controllers
 
             if (userRole != "Admin" && userRole != "SuperAdmin")
             {
-                return Forbid();
+                return Unauthorized();
             }
 
             _userService.DeleteUser(id);

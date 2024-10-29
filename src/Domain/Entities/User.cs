@@ -11,7 +11,6 @@ namespace Domain.Entities
 {
     public class User
     {
-
         public int Id {  get; set; }
         [Required(ErrorMessage = "The name must be completed")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "The name must between 2 and 50 characters long")]

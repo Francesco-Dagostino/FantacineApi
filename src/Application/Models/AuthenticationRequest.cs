@@ -17,8 +17,5 @@ namespace Application.Models
         [Required]
         [StringLength(20, MinimumLength = 8)]
         public string? Password { get; set; }
-
-        [Required]
-        public string? UserType { get; set; }
     }
 }

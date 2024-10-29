@@ -40,7 +40,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(setupAction =>
 {
-    setupAction.AddSecurityDefinition("EcommerceApiBearerAuth", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
+    setupAction.AddSecurityDefinition("FantacineApi", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
     {
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
@@ -55,8 +55,9 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "FantacineApi" } //Tiene que coincidir con el id seteado arriba en la definición
-                }, new List<string>() 
+                    Id = "FantacineApi"  //Tiene que coincidir con el id seteado arriba en la definición
+                }
+            }, new List<string>() 
         }
     });
 
