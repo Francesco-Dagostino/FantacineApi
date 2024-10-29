@@ -29,7 +29,7 @@ namespace Api.Controllers
             try
             {
                 var createdUser = _userService.Create(user);
-                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser);
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
             }
             catch (Exception ex)
             {

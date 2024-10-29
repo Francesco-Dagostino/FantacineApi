@@ -26,7 +26,7 @@ namespace Infrastructure.Data
 
             modelBuilder.Entity<Membership>()
                 .HasOne(o => o.User)
-                .WithOne(v => v.Memberships)
+                .WithOne(v => v.Membership)
                 .HasForeignKey<Membership>(o => o.UserId);
         }
     }

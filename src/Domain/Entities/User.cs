@@ -13,7 +13,6 @@ namespace Domain.Entities
     {
 
         public int Id {  get; set; }
-        public int UserId { get; set; }
         [Required(ErrorMessage = "The name must be completed")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "The name must between 2 and 50 characters long")]
         public string Name { get; set; }
@@ -26,7 +25,7 @@ namespace Domain.Entities
         public string Password { get; set; }
         public DateTime Birthday { get; set; }
         public Roles Role { get; set; } // Aquí utilizamos el enum
-        public virtual Membership Memberships { get; set; } 
+        public virtual Membership Membership { get; set; } 
         public User() { }
     }
 }

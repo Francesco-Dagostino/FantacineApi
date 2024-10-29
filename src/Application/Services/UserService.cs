@@ -46,7 +46,7 @@ namespace Application.Services
                 Name = user.Name,
                 Password = user.Password,
                 Role = Roles.Client, // Asigna rol por defecto
-                Memberships = new Membership // Inicializa la membresía directamente
+                Membership = new Membership // Inicializa la membresía directamente
                 {
                     Date = DateTime.Now,
                     Payment = 0, // O el monto que desees
