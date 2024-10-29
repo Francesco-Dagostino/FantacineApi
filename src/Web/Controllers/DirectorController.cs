@@ -2,6 +2,7 @@
 using Application.Models;
 using Application.Services;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 
@@ -16,7 +17,7 @@ namespace Web.Controllers
         {
             _service = service;
         }
-
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost("Agregar Director")]
         public ActionResult<Director> AddDirector([FromBody] DirectorCreateRequest director)
         {
@@ -27,7 +28,7 @@ namespace Web.Controllers
 
             return Ok(_service.AddDirector(director));
         }
-
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet("{id}")]
         public ActionResult<Director> GetDirectorByID(int id) 
         {
@@ -45,6 +46,7 @@ namespace Web.Controllers
             return Ok(_service.GetAllDirector());
         }
 
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPut("Update/{id}")]
         public ActionResult UpdateDirector([FromRoute]int id,[FromBody]DirectorUpdateRequest director ) 
         {
@@ -60,6 +62,7 @@ namespace Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpDelete("Delete/{id}")]
         public ActionResult DeleteDirector(int id)
         {

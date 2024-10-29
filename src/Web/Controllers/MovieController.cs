@@ -4,6 +4,7 @@ using Application.Services;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -17,6 +18,8 @@ namespace Web.Controllers
         { 
             _movieRepository = movieRepository;
         }
+
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost("Add Movie")]
         public ActionResult<Movie> AddMovie([FromBody] MovieCreateRequest movie) 
         {
@@ -24,7 +27,7 @@ namespace Web.Controllers
             return Ok(_movieRepository.AddMovie(movie));
             
         }
-
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet("{id}")]
         public ActionResult<Movie> GetMovieById(int id) 
         {
@@ -63,6 +66,7 @@ namespace Web.Controllers
             
         }
 
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPut("Update/{id}")]
         public ActionResult UpdateMovie([FromRoute] int id,[FromBody] MovieUpdateRequest movie) 
         {
@@ -78,6 +82,7 @@ namespace Web.Controllers
            
         }
 
+        [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpDelete("Delete/{id}")]
         public ActionResult DeleteMovie(int id) 
         { 
