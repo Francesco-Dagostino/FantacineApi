@@ -17,6 +17,7 @@ namespace Web.Controllers
         {
             _service = service;
         }
+        
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpPost("Agregar Director")]
         public ActionResult<Director> AddDirector([FromBody] DirectorCreateRequest director)
@@ -28,6 +29,7 @@ namespace Web.Controllers
 
             return Ok(_service.AddDirector(director));
         }
+
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet("{id}")]
         public ActionResult<Director> GetDirectorByID(int id) 

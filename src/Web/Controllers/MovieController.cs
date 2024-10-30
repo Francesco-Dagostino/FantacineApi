@@ -27,6 +27,8 @@ namespace Web.Controllers
             return Ok(_movieRepository.AddMovie(movie));
             
         }
+
+
         [Authorize(Roles = "Admin, SuperAdmin")]
         [HttpGet("{id}")]
         public ActionResult<Movie> GetMovieById(int id) 
@@ -47,8 +49,8 @@ namespace Web.Controllers
         }
 
 
-        [HttpGet("Filtrar por genero/{genre}")]
-        public ActionResult<List<Movie>> GetMoviesByGenre(Genre genre)
+        [HttpGet("FiltrarPorGenero/{genre}")]
+        public ActionResult<List<Movie>> GetMoviesByGenre([FromRoute] Genre genre)
         {
             var movies = _movieRepository.GetMoviesByGenre(genre);
             if (movies == null || movies.Count == 0)

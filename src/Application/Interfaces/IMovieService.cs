@@ -18,7 +18,5 @@ namespace Application.Interfaces
         void DeleteMovie(int id);
         List<Movie> GetMoviesByGenre(Genre genre);
         List<string> GetGenres();
-
-        //List<Movie> GetMoviesByStatus(MovieStatus status); Disponible | NoDisponible */
     }
 }
