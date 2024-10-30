@@ -22,8 +22,7 @@ namespace Application.Services
             {
                
                 Name = request.Name,
-                Description = request.Description,
-                Category = request.Category
+                Description = request.Description
              
             };
 
@@ -67,7 +66,7 @@ namespace Application.Services
             // Mapear los campos actualizados del DTO a la entidad existente
             existingDirector.Name = director.Name;
             existingDirector.Description = director.Description;
-            existingDirector.Category = director.Category;
+            
 
 
             _directorRepository.Update(existingDirector);

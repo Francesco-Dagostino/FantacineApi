@@ -18,8 +18,7 @@ namespace Application.Models
         [Required(ErrorMessage = "The Description is required.")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "The Category is required.")]
-        public string Category { get; set; }
+
     }
 
     public class DirectorUpdateRequest
@@ -29,9 +28,6 @@ namespace Application.Models
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
-        [Required]
-        public string Category { get; set; }
-
         public int DirectorId { get; set; }
     }
 }
