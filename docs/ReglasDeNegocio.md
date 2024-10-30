@@ -1,8 +1,8 @@
 REGLAS DE NEGOCIO
 
-- Un usuario puede tener una determinada membresía
-- Una membresía puede tener muchos usuarios
-- No se podran ver peliculas sin la membresia activa.
-- Un usuario tiene una cantidad de peliculas vistas
-- un director tiene una o muchas peliculas
+- Un usuario mediante un rol puede crear Directores y peliculas
+- Un usuario puede ver las peliculas disponibles
+- Un usuario puede ver todos los directores que hay, y ver que peliculas tiene dirigidas
+- Un director tiene una o muchas peliculas
+- Una pelicula tiene un director
 - Una pelicula tiene una categoría
