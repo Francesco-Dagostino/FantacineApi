@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Interfaces;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,12 +94,12 @@ namespace Application.Services
         //Roles..
         public void UpdateRole(int id, SuperAdminUserUpdateRequest userToUpdate)
         {
-            var userRequestingChange = GetUserById(id);
-            // Solo el SuperAdmin puede cambiar roles
-            if (userRequestingChange.Role != Roles.SuperAdmin)
-            {
-                throw new UnauthorizedAccessException("Only SuperAdmin can change roles.");
-            }
+            var user = GetUserById(id);
+
+
+            if (user.Role != userToUpdate.Roles) user.Role = userToUpdate.Roles;
+
+            _repository.Update(user);
         }
     }
 }
